@@ -1,5 +1,6 @@
 use std::io::Cursor;
 
+use Packed;
 use Packer;
 use Unpacker;
 
@@ -69,6 +70,14 @@ struct Foo {
     a: u16,
     b: f32,
     c: i8
+}
+
+impl Packed for Foo {
+    fn switch_endianness(&mut self) {
+        self.a.switch_endianness();
+        self.b.switch_endianness();
+        self.c.switch_endianness();
+    }
 }
 
 #[test]
