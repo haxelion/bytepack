@@ -4,9 +4,11 @@
 //! of `u8`. This crate focus on performances by beeing no copy (except in one clearly marked case) 
 //! and offering methods to read and write arrays.
 //! 
-//! `bytepack` offers three trait famillies allowing different endianness control. `Unpacker` and 
-//! `Packer` read and write data in the endianness of the operating system. `LEUnpacker` and 
-//! `LEPacker` always read and write data in little endian while `BEUnpacker` and `BEPacker` do the 
+//! `bytepack` offers three trait famillies allowing different endianness control. 
+//! [`Unpacker`](trait.Unpacked.html) and [`Packer`](trait.Packer.html) read and write data in the 
+//! endianness of the operating system. [`LEUnpacker`](trait.LEUnpacker.html) and 
+//! [`LEPacker`](trait.LEPacker.html) always read and write data in little endian while 
+//! [`BEUnpacker`](trait.BEUnpacker.html) and [`BEPacker`](trait.BEPacker.html) do the 
 //! same in big endian. They all conform to the same API which is copied from the one of `std::io`.
 //! This means switching from one endianness to another can be done by simply bringing a different 
 //! trait in scope.
@@ -14,28 +16,95 @@
 //! Because `bytepack` is not a serialization library, it cannot read and write complex types like 
 //! `Vec`, `Rc`, etc. directly from a Reader or to Writer. Indeed those types do not contain the 
 //! underlying data directly packed inside but rather hold a reference or a pointer to it. To 
-//! identify types which holds their data "packed" together, the `Packed` trait is used. 
-//! Additionnaly it provides a in-memory endianness switching method. One can implement this trait 
-//! for the data types deemed safe to read and write. An automatic derive for structures made only 
-//! of types implemting `Packed` could be implemented in the future.
+//! identify types which holds their data "packed" together, the [`Packed`](trait.Packed.html) 
+//! trait is used. Additionnaly it provides a in-place endianness switching method. One can 
+//! implement this trait for the data types deemed safe to read and write. An automatic derive for 
+//! structures made only of types implementing [`Packed`](trait.Packed.html) could be added in the 
+//! future.
+//!
+//! # Example
+//!
+//! ```no_run
+//! use std::fs::File;
+//! use std::iter::repeat;
+//!
+//! use bytepack::{LEPacker, LEUnpacker};
+//!
+//! fn write_samples(file: &str, samples: &Vec<f32>) {
+//!     let mut file = File::create(file).unwrap();
+//!     file.pack(samples.len() as u32).unwrap();
+//!     file.pack_all(&samples[..]).unwrap();
+//! }
+//!
+//! fn read_samples(file: &str) -> Vec<f32> {
+//!     let mut file = File::open(file).unwrap();
+//!     let num_samples : u32 = file.unpack().unwrap();
+//!     let mut samples : Vec<f32> = repeat(0f32).take(num_samples as usize).collect();
+//!     file.unpack_exact(&mut samples[..]).unwrap();
+//!     return samples;
+//! }
+//! ```
 
 use std::io::{Read, Write, Result, Error, ErrorKind};
 use std::mem::{zeroed, transmute, size_of, forget};
 use std::slice;
 
+/// This trait both identifies a type which holds his data packed together in memory and a type 
+/// which offers a `switch_endianness` method. This trait is voluntarily not implemented for 
+/// `isize` and `usize` because their size can vary from one system to another.
+///
+/// # Example
+///
+/// If you would like to read and write one of your struct using `bytepack`, you can implement 
+/// `Packed` for it:
+///
+/// ```
+/// use bytepack::Packed;
+///
+/// struct Foo {
+///     a: i16,
+///     b: f32,
+///     c: u8
+/// }
+///
+/// impl Packed for Foo {
+///     fn switch_endianness(&mut self) {
+///         self.a.switch_endianness();
+///         self.b.switch_endianness();
+///         self.c.switch_endianness();
+///     }
+/// }
+/// ```
+///
+/// However you need to make sure your struct is indeed "packed" and that reading and writing it as 
+/// one continuous memory zone makes sense. For example the following structures are not "packed" 
+/// because they all hold a reference to their data.
+///
+/// ```ignore
+/// struct NotPacked1 {
+///     name: String
+/// }
+///
+/// struct NotPacked2 {
+///     numbers: Vec<f32>
+/// }
+///
+/// struct NotPacked3 {
+///     count: Rc<u64>
+/// }
+/// ```
 pub trait Packed {
+    /// Perform an in-place switch of the endianness. This might be a no-op in some cases.
     fn switch_endianness(&mut self);
 }
 
 impl Packed for u8 {
     fn switch_endianness(&mut self) {
-        *self = u8::swap_bytes(*self);
     }
 }
 
 impl Packed for i8 {
     fn switch_endianness(&mut self) {
-        *self = i8::swap_bytes(*self);
     }
 }
 
@@ -93,14 +162,146 @@ impl Packed for f64 {
     }
 }
 
+impl<T> Packed for [T;1] where T: Packed {
+    fn switch_endianness(&mut self) {
+        self[0].switch_endianness();
+    }
+}
+
+impl<T> Packed for [T;2] where T: Packed {
+    fn switch_endianness(&mut self) {
+        self[0].switch_endianness();
+        self[1].switch_endianness();
+    }
+}
+
+impl<T> Packed for [T;3] where T: Packed {
+    fn switch_endianness(&mut self) {
+        self[0].switch_endianness();
+        self[1].switch_endianness();
+        self[2].switch_endianness();
+    }
+}
+
+impl<T> Packed for [T;4] where T: Packed {
+    fn switch_endianness(&mut self) {
+        self[0].switch_endianness();
+        self[1].switch_endianness();
+        self[2].switch_endianness();
+        self[3].switch_endianness();
+    }
+}
+
+impl<T> Packed for [T;5] where T: Packed {
+    fn switch_endianness(&mut self) {
+        self[0].switch_endianness();
+        self[1].switch_endianness();
+        self[2].switch_endianness();
+        self[3].switch_endianness();
+        self[4].switch_endianness();
+    }
+}
+
+/// `Unpacker` provides the `std::io::Read` API but for any type `T` implementing 
+/// [`Packed`](trait.Packed.html). It does not perform any endianness conversion and thus always 
+/// reads data using the system endianness.
+///
+/// # Example
+/// 
+/// Example of reading a file containing a few float samples.
+/// 
+/// ```no_run
+/// use std::fs::File;
+/// use std::iter::repeat;
+///
+/// use bytepack::Unpacker;
+///
+/// fn read_samples(file: &str) -> Vec<f32> {
+///     let mut file = File::open(file).unwrap();
+///     let num_samples : u32 = file.unpack().unwrap();
+///     let mut samples : Vec<f32> = repeat(0f32).take(num_samples as usize).collect();
+///     file.unpack_exact(&mut samples[..]).unwrap();
+///     return samples;
+/// }
+/// ```
 pub trait Unpacker {
+
+    /// Unpack a single value of type `T`.
+    ///
+    /// ```no_run
+    /// # use bytepack::Unpacker;
+    /// # use std::fs::File;
+    /// let mut file = File::open("test").unwrap();
+    /// let float : f32 = file.unpack().unwrap();
+    /// ```
     fn unpack<T: Packed>(&mut self) -> Result<T>;
+
+    /// Unpack values of type `T` until `EOF` is reached and place them in `buf`. An error is 
+    /// returned if the number of bytes read is not a multiple of the size of `T`.
+    ///
+    /// ```no_run
+    /// # use bytepack::Unpacker;
+    /// # use std::fs::File;
+    /// let mut file = File::open("test").unwrap();
+    /// let mut buffer = Vec::<u64>::new();
+    /// file.unpack_to_end(&mut buffer).unwrap();
+    /// ```
     fn unpack_to_end<T: Packed>(&mut self, buf: &mut Vec<T>) -> Result<usize>;
+
+    /// Unpack the exact number of values of type `T` to fill `buf`. An error is 
+    /// returned if not enough byte could be read.
+    ///
+    /// ```no_run
+    /// # use bytepack::Unpacker;
+    /// # use std::fs::File;
+    /// let mut file = File::open("test").unwrap();
+    /// let mut buffer = vec![0i32; 10];
+    /// file.unpack_exact(&mut buffer[..]).unwrap();
+    /// ```
     fn unpack_exact<T: Packed>(&mut self, buf: &mut [T]) -> Result<()>;
 }
 
+/// `Packer` provides the `std::io::Write` API but for any type `T` implementing 
+/// [`Packed`](trait.Packed.html). It does not perform any endianness conversion and thus always 
+/// writes data using the system endianness.
+///
+/// # Example
+/// 
+/// Example of writing a file containing a few float samples.
+/// 
+/// ```no_run
+/// use std::fs::File;
+/// use std::iter::repeat;
+///
+/// use bytepack::Packer;
+///
+/// fn write_samples(file: &str, samples: &Vec<f32>) {
+///     let mut file = File::create(file).unwrap();
+///     file.pack(samples.len() as u32).unwrap();
+///     file.pack_all(&samples[..]).unwrap();
+/// }
+/// ```
 pub trait Packer {
+
+    /// Pack a single value of type `T`.
+    ///
+    /// ```no_run
+    /// # use bytepack::Packer;
+    /// # use std::fs::File;
+    /// let mut file = File::create("test").unwrap();
+    /// file.pack(42f32).unwrap();
+    /// ```
     fn pack<T: Packed>(&mut self, t: T) -> Result<()>;
+
+    /// Pack all the values of type `T` from `buf`.
+    ///
+    /// ```no_run
+    /// # use bytepack::Packer;
+    /// # use std::fs::File;
+    /// let mut file = File::create("test").unwrap();
+    /// let mut float_buffer = vec![666u16; 10];
+    /// file.pack_all(&mut float_buffer[..]).unwrap();
+    /// ```
     fn pack_all<T: Packed>(&mut self, buf: &[T]) -> Result<()>;
 }
 
@@ -177,14 +378,23 @@ impl<W> Packer for W where W: Write {
     }
 }
 
+/// Provides the same API and functionnality as [`Unpacker`](trait.Unpacker.html) but ensure that 
+/// the data is in little endian format. See [`Unpacker`](trait.Unpacker.html) for more 
+/// documentation.
 pub trait LEUnpacker {
     fn unpack<T: Packed>(&mut self) -> Result<T>;
     fn unpack_to_end<T: Packed>(&mut self, buf: &mut Vec<T>) -> Result<usize>;
     fn unpack_exact<T: Packed>(&mut self, buf: &mut [T]) -> Result<()>;
 }
 
+/// Provides the same API and functionnality as [`Packer`](trait.Packer.html) but ensure that 
+/// the data is in little endian format. See [`Packer`](trait.Packer.html) for more 
+/// documentation.
 pub trait LEPacker {
     fn pack<T: Packed>(&mut self, t: T) -> Result<()>;
+
+    /// Here T needs to be `Clone` because the endianness switch cannot be done in-place. This method 
+    /// thus allocates a copy of `buf` if an endianness switch is needed.
     fn pack_all<T: Packed + Clone>(&mut self, buf: &[T]) -> Result<()>;
 }
 
@@ -254,14 +464,23 @@ impl<W> LEPacker for W where W: Write {
     }
 }
 
+/// Provides the same API and functionnality as [`Unpacker`](trait.Unpacker.html) but ensure that 
+/// the data is in big endian format. See [`Unpacker`](trait.Unpacker.html) for more 
+/// documentation.
 pub trait BEUnpacker {
     fn unpack<T: Packed>(&mut self) -> Result<T>;
     fn unpack_to_end<T: Packed>(&mut self, buf: &mut Vec<T>) -> Result<usize>;
     fn unpack_exact<T: Packed>(&mut self, buf: &mut [T]) -> Result<()>;
 }
 
+/// Provides the same API and functionnality as [`Packer`](trait.Packer.html) but ensure that 
+/// the data is in big endian format. See [`Packer`](trait.Packer.html) for more 
+/// documentation.
 pub trait BEPacker {
     fn pack<T: Packed>(&mut self, t: T) -> Result<()>;
+
+    /// Here T needs to be `Clone` because the endianness switch cannot be done in-place. This method 
+    /// thus allocates a copy of `buf` if an endianness switch is needed.
     fn pack_all<T: Packed + Clone>(&mut self, buf: &[T]) -> Result<()>;
 }
 
