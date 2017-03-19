@@ -98,6 +98,11 @@ pub trait Packed {
     fn switch_endianness(&mut self);
 }
 
+impl Packed for bool {
+    fn switch_endianness(&mut self) {
+    }
+}
+
 impl Packed for u8 {
     fn switch_endianness(&mut self) {
     }
