@@ -1,0 +1,6 @@
+[package]
+name = "bytepack"
+version = "0.1.0"
+authors = ["Charles Hubain <github@haxelion.eu>"]
+
+[dependencies]
