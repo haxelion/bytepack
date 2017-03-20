@@ -24,7 +24,8 @@ underlying data directly packed inside but rather hold a reference or a pointer 
 identify types which holds their data "packed" together, the `Packed` trait is used. Additionnaly 
 it provides a in-place endianness switching method. One can implement this trait for the data types 
 deemed safe to read and write. An automatic derive for structures made only of types implementing 
-`Packed` could be added in the future.
+`Packed` is also implemented in the [`bytepack_derive`](https://github.com/haxelion/bytepack_derive) 
+crate.
 
 Example
 -------
@@ -32,6 +33,8 @@ Example
 Here are two functions which can serialize and deserialize a `Vec<f32>`:
 
 ``` rust
+extern crate bytepack;
+
 use std::fs::File;
 use std::iter::repeat;
 
@@ -51,3 +54,57 @@ fn read_samples(file: &str) -> Vec<f32> {
     return samples;
 }
 ```
+
+Thanks to the genericity of the `Packed` trait we could make the previous function generic:
+
+``` rust
+extern crate bytepack;
+
+use std::fs::File;
+
+use bytepack::{LEPacker, Packed};
+
+fn write_vec<T: Packed + Clone>(file: &str, samples: &Vec<T>) {
+    let mut file = File::create(file).unwrap();
+    file.pack(samples.len() as u32).unwrap();
+    file.pack_all(&samples[..]).unwrap();
+}
+```
+
+Because we can derive Packed for our own struct, we can use them with our own types:
+
+``` rust
+extern crate bytepack;
+#[macro_use]
+extern crate bytepack_derive;
+
+use std::fs::File;
+
+use bytepack::{LEPacker, Packed};
+
+#[derive(Packed, Clone)]
+struct Vertex<T: Packed> {
+    x: T,
+    y: T,
+    z: T
+}
+
+fn write_vec<T: Packed + Clone>(file: &str, samples: &Vec<T>) {
+    let mut file = File::create(file).unwrap();
+    file.pack(samples.len() as u32).unwrap();
+    file.pack_all(&samples[..]).unwrap();
+}
+
+fn main() {
+    let square : Vec<Vertex<f32>> = vec![
+        Vertex{x: 0.0, y: 0.0, z: 0.0},
+        Vertex{x: 1.0, y: 0.0, z: 0.0},
+        Vertex{x: 1.0, y: 1.0, z: 0.0},
+        Vertex{x: 0.0, y: 1.0, z: 0.0},
+    ];
+
+    write_vec("square.raw", &square);
+}
+```
+
+
