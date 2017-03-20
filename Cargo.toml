@@ -1,6 +1,6 @@
 [package]
 name = "bytepack"
-version = "0.1.1"
+version = "0.2.0"
 authors = ["Charles Hubain <github@haxelion.eu>"]
 description = "bytepack offers a Read and Write trait extension generalized for any packed data type."
 documentation = "https://docs.rs/bytepack"
@@ -9,3 +9,4 @@ repository = "https://github.com/haxelion/bytepack"
 license = "Apache-2.0"
 
 [dependencies]
+bytepack_derive = "0.1.1"

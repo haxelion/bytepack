@@ -18,9 +18,8 @@
 //! underlying data directly packed inside but rather hold a reference or a pointer to it. To 
 //! identify types which holds their data "packed" together, the [`Packed`](trait.Packed.html) 
 //! trait is used. Additionnaly it provides a in-place endianness switching method. One can 
-//! implement this trait for the data types deemed safe to read and write. An automatic derive for 
-//! structures made only of types implementing [`Packed`](trait.Packed.html) could be added in the 
-//! future.
+//! implement this trait for the data types deemed safe to read and write. A custom derive for 
+//! structures made only of types implementing [`Packed`](trait.Packed.html) also exists.
 //!
 //! # Example
 //!
@@ -55,28 +54,41 @@ use std::slice;
 ///
 /// # Example
 ///
-/// If you would like to read and write one of your struct using `bytepack`, you can implement 
+/// If you would like to read and write one of your struct using `bytepack`, you can derive 
 /// `Packed` for it:
 ///
-/// ```
-/// use bytepack::Packed;
+/// ```no_run
+/// extern crate bytepack;
+/// #[macro_use]
+/// extern crate bytepack_derive;
+/// 
+/// use std::fs::File;
+/// use bytepack::{LEUnpacker, Packed};
 ///
-/// struct Foo {
-///     a: i16,
-///     b: f32,
-///     c: u8
+/// #[derive(Packed)]
+/// struct Vector {
+///    x: f32,
+///    y: f32,
+///    z: f32,
 /// }
 ///
-/// impl Packed for Foo {
-///     fn switch_endianness(&mut self) {
-///         self.a.switch_endianness();
-///         self.b.switch_endianness();
-///         self.c.switch_endianness();
-///     }
+/// #[derive(Packed)]
+/// struct RGB(u8,u8,u8);
+///
+/// fn main() {
+///     let mut file = File::open("test").unwrap();
+///     let vector : Vector = file.unpack().unwrap();
+///     let rgb : RGB = file.unpack().unwrap();
 /// }
+///
 /// ```
 ///
-/// However you need to make sure your struct is indeed "packed" and that reading and writing it as 
+/// Please note that also specifying `#[repr(packed)]` might make sense if you want to get rid of 
+/// the padding inside your structure.
+/// 
+/// `Packed` can only be derived for strutures only composed of types implementing `Packed` 
+/// themselves. If you which to circumvent this restriction you can implement `Packed` yourselve, 
+/// however you need to make sure your struct is indeed "packed" and that reading and writing it as 
 /// one continuous memory zone makes sense. For example the following structures are not "packed" 
 /// because they all hold a reference to their data.
 ///
@@ -554,6 +566,3 @@ impl<W> BEPacker for W where W: Write {
         }
     }
 }
-
-#[cfg(test)]
-mod tests;

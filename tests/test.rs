@@ -1,8 +1,10 @@
+extern crate bytepack;
+#[macro_use]
+extern crate bytepack_derive;
+
 use std::io::Cursor;
 
-use Packed;
-use Packer;
-use Unpacker;
+use bytepack::{Packer, Unpacker, Packed};
 
 #[test]
 fn u64_exact() {
@@ -66,18 +68,11 @@ fn multiple() {
     assert!(buffer.unpack::<f64>().unwrap() == -6.0f64);
 }
 
+#[derive(Packed)]
 struct Foo {
     a: u16,
     b: f32,
     c: i8
-}
-
-impl Packed for Foo {
-    fn switch_endianness(&mut self) {
-        self.a.switch_endianness();
-        self.b.switch_endianness();
-        self.c.switch_endianness();
-    }
 }
 
 #[test]
