@@ -219,6 +219,654 @@ impl<T> Packed for [T;5] where T: Packed {
     }
 }
 
+impl<T> Packed for [T;6] where T: Packed {
+    fn switch_endianness(&mut self) {
+        self[0].switch_endianness();
+        self[1].switch_endianness();
+        self[2].switch_endianness();
+        self[3].switch_endianness();
+        self[4].switch_endianness();
+        self[5].switch_endianness();
+    }
+}
+
+impl<T> Packed for [T;7] where T: Packed {
+    fn switch_endianness(&mut self) {
+        self[0].switch_endianness();
+        self[1].switch_endianness();
+        self[2].switch_endianness();
+        self[3].switch_endianness();
+        self[4].switch_endianness();
+        self[5].switch_endianness();
+        self[6].switch_endianness();
+    }
+}
+
+impl<T> Packed for [T;8] where T: Packed {
+    fn switch_endianness(&mut self) {
+        self[0].switch_endianness();
+        self[1].switch_endianness();
+        self[2].switch_endianness();
+        self[3].switch_endianness();
+        self[4].switch_endianness();
+        self[5].switch_endianness();
+        self[6].switch_endianness();
+        self[7].switch_endianness();
+    }
+}
+
+impl<T> Packed for [T;9] where T: Packed {
+    fn switch_endianness(&mut self) {
+        self[0].switch_endianness();
+        self[1].switch_endianness();
+        self[2].switch_endianness();
+        self[3].switch_endianness();
+        self[4].switch_endianness();
+        self[5].switch_endianness();
+        self[6].switch_endianness();
+        self[7].switch_endianness();
+        self[8].switch_endianness();
+    }
+}
+
+impl<T> Packed for [T;10] where T: Packed {
+    fn switch_endianness(&mut self) {
+        self[0].switch_endianness();
+        self[1].switch_endianness();
+        self[2].switch_endianness();
+        self[3].switch_endianness();
+        self[4].switch_endianness();
+        self[5].switch_endianness();
+        self[6].switch_endianness();
+        self[7].switch_endianness();
+        self[8].switch_endianness();
+        self[9].switch_endianness();
+    }
+}
+
+impl<T> Packed for [T;11] where T: Packed {
+    fn switch_endianness(&mut self) {
+        self[0].switch_endianness();
+        self[1].switch_endianness();
+        self[2].switch_endianness();
+        self[3].switch_endianness();
+        self[4].switch_endianness();
+        self[5].switch_endianness();
+        self[6].switch_endianness();
+        self[7].switch_endianness();
+        self[8].switch_endianness();
+        self[9].switch_endianness();
+        self[10].switch_endianness();
+    }
+}
+
+impl<T> Packed for [T;12] where T: Packed {
+    fn switch_endianness(&mut self) {
+        self[0].switch_endianness();
+        self[1].switch_endianness();
+        self[2].switch_endianness();
+        self[3].switch_endianness();
+        self[4].switch_endianness();
+        self[5].switch_endianness();
+        self[6].switch_endianness();
+        self[7].switch_endianness();
+        self[8].switch_endianness();
+        self[9].switch_endianness();
+        self[10].switch_endianness();
+        self[11].switch_endianness();
+    }
+}
+
+impl<T> Packed for [T;13] where T: Packed {
+    fn switch_endianness(&mut self) {
+        self[0].switch_endianness();
+        self[1].switch_endianness();
+        self[2].switch_endianness();
+        self[3].switch_endianness();
+        self[4].switch_endianness();
+        self[5].switch_endianness();
+        self[6].switch_endianness();
+        self[7].switch_endianness();
+        self[8].switch_endianness();
+        self[9].switch_endianness();
+        self[10].switch_endianness();
+        self[11].switch_endianness();
+        self[12].switch_endianness();
+    }
+}
+
+impl<T> Packed for [T;14] where T: Packed {
+    fn switch_endianness(&mut self) {
+        self[0].switch_endianness();
+        self[1].switch_endianness();
+        self[2].switch_endianness();
+        self[3].switch_endianness();
+        self[4].switch_endianness();
+        self[5].switch_endianness();
+        self[6].switch_endianness();
+        self[7].switch_endianness();
+        self[8].switch_endianness();
+        self[9].switch_endianness();
+        self[10].switch_endianness();
+        self[11].switch_endianness();
+        self[12].switch_endianness();
+        self[13].switch_endianness();
+    }
+}
+
+impl<T> Packed for [T;15] where T: Packed {
+    fn switch_endianness(&mut self) {
+        self[0].switch_endianness();
+        self[1].switch_endianness();
+        self[2].switch_endianness();
+        self[3].switch_endianness();
+        self[4].switch_endianness();
+        self[5].switch_endianness();
+        self[6].switch_endianness();
+        self[7].switch_endianness();
+        self[8].switch_endianness();
+        self[9].switch_endianness();
+        self[10].switch_endianness();
+        self[11].switch_endianness();
+        self[12].switch_endianness();
+        self[13].switch_endianness();
+        self[14].switch_endianness();
+    }
+}
+
+impl<T> Packed for [T;16] where T: Packed {
+    fn switch_endianness(&mut self) {
+        self[0].switch_endianness();
+        self[1].switch_endianness();
+        self[2].switch_endianness();
+        self[3].switch_endianness();
+        self[4].switch_endianness();
+        self[5].switch_endianness();
+        self[6].switch_endianness();
+        self[7].switch_endianness();
+        self[8].switch_endianness();
+        self[9].switch_endianness();
+        self[10].switch_endianness();
+        self[11].switch_endianness();
+        self[12].switch_endianness();
+        self[13].switch_endianness();
+        self[14].switch_endianness();
+        self[15].switch_endianness();
+    }
+}
+
+impl<T> Packed for [T;17] where T: Packed {
+    fn switch_endianness(&mut self) {
+        self[0].switch_endianness();
+        self[1].switch_endianness();
+        self[2].switch_endianness();
+        self[3].switch_endianness();
+        self[4].switch_endianness();
+        self[5].switch_endianness();
+        self[6].switch_endianness();
+        self[7].switch_endianness();
+        self[8].switch_endianness();
+        self[9].switch_endianness();
+        self[10].switch_endianness();
+        self[11].switch_endianness();
+        self[12].switch_endianness();
+        self[13].switch_endianness();
+        self[14].switch_endianness();
+        self[15].switch_endianness();
+        self[16].switch_endianness();
+    }
+}
+
+impl<T> Packed for [T;18] where T: Packed {
+    fn switch_endianness(&mut self) {
+        self[0].switch_endianness();
+        self[1].switch_endianness();
+        self[2].switch_endianness();
+        self[3].switch_endianness();
+        self[4].switch_endianness();
+        self[5].switch_endianness();
+        self[6].switch_endianness();
+        self[7].switch_endianness();
+        self[8].switch_endianness();
+        self[9].switch_endianness();
+        self[10].switch_endianness();
+        self[11].switch_endianness();
+        self[12].switch_endianness();
+        self[13].switch_endianness();
+        self[14].switch_endianness();
+        self[15].switch_endianness();
+        self[16].switch_endianness();
+        self[17].switch_endianness();
+    }
+}
+
+impl<T> Packed for [T;19] where T: Packed {
+    fn switch_endianness(&mut self) {
+        self[0].switch_endianness();
+        self[1].switch_endianness();
+        self[2].switch_endianness();
+        self[3].switch_endianness();
+        self[4].switch_endianness();
+        self[5].switch_endianness();
+        self[6].switch_endianness();
+        self[7].switch_endianness();
+        self[8].switch_endianness();
+        self[9].switch_endianness();
+        self[10].switch_endianness();
+        self[11].switch_endianness();
+        self[12].switch_endianness();
+        self[13].switch_endianness();
+        self[14].switch_endianness();
+        self[15].switch_endianness();
+        self[16].switch_endianness();
+        self[17].switch_endianness();
+        self[18].switch_endianness();
+    }
+}
+
+impl<T> Packed for [T;20] where T: Packed {
+    fn switch_endianness(&mut self) {
+        self[0].switch_endianness();
+        self[1].switch_endianness();
+        self[2].switch_endianness();
+        self[3].switch_endianness();
+        self[4].switch_endianness();
+        self[5].switch_endianness();
+        self[6].switch_endianness();
+        self[7].switch_endianness();
+        self[8].switch_endianness();
+        self[9].switch_endianness();
+        self[10].switch_endianness();
+        self[11].switch_endianness();
+        self[12].switch_endianness();
+        self[13].switch_endianness();
+        self[14].switch_endianness();
+        self[15].switch_endianness();
+        self[16].switch_endianness();
+        self[17].switch_endianness();
+        self[18].switch_endianness();
+        self[19].switch_endianness();
+    }
+}
+
+impl<T> Packed for [T;21] where T: Packed {
+    fn switch_endianness(&mut self) {
+        self[0].switch_endianness();
+        self[1].switch_endianness();
+        self[2].switch_endianness();
+        self[3].switch_endianness();
+        self[4].switch_endianness();
+        self[5].switch_endianness();
+        self[6].switch_endianness();
+        self[7].switch_endianness();
+        self[8].switch_endianness();
+        self[9].switch_endianness();
+        self[10].switch_endianness();
+        self[11].switch_endianness();
+        self[12].switch_endianness();
+        self[13].switch_endianness();
+        self[14].switch_endianness();
+        self[15].switch_endianness();
+        self[16].switch_endianness();
+        self[17].switch_endianness();
+        self[18].switch_endianness();
+        self[19].switch_endianness();
+        self[20].switch_endianness();
+    }
+}
+
+impl<T> Packed for [T;22] where T: Packed {
+    fn switch_endianness(&mut self) {
+        self[0].switch_endianness();
+        self[1].switch_endianness();
+        self[2].switch_endianness();
+        self[3].switch_endianness();
+        self[4].switch_endianness();
+        self[5].switch_endianness();
+        self[6].switch_endianness();
+        self[7].switch_endianness();
+        self[8].switch_endianness();
+        self[9].switch_endianness();
+        self[10].switch_endianness();
+        self[11].switch_endianness();
+        self[12].switch_endianness();
+        self[13].switch_endianness();
+        self[14].switch_endianness();
+        self[15].switch_endianness();
+        self[16].switch_endianness();
+        self[17].switch_endianness();
+        self[18].switch_endianness();
+        self[19].switch_endianness();
+        self[20].switch_endianness();
+        self[21].switch_endianness();
+    }
+}
+
+impl<T> Packed for [T;23] where T: Packed {
+    fn switch_endianness(&mut self) {
+        self[0].switch_endianness();
+        self[1].switch_endianness();
+        self[2].switch_endianness();
+        self[3].switch_endianness();
+        self[4].switch_endianness();
+        self[5].switch_endianness();
+        self[6].switch_endianness();
+        self[7].switch_endianness();
+        self[8].switch_endianness();
+        self[9].switch_endianness();
+        self[10].switch_endianness();
+        self[11].switch_endianness();
+        self[12].switch_endianness();
+        self[13].switch_endianness();
+        self[14].switch_endianness();
+        self[15].switch_endianness();
+        self[16].switch_endianness();
+        self[17].switch_endianness();
+        self[18].switch_endianness();
+        self[19].switch_endianness();
+        self[20].switch_endianness();
+        self[21].switch_endianness();
+        self[22].switch_endianness();
+    }
+}
+
+impl<T> Packed for [T;24] where T: Packed {
+    fn switch_endianness(&mut self) {
+        self[0].switch_endianness();
+        self[1].switch_endianness();
+        self[2].switch_endianness();
+        self[3].switch_endianness();
+        self[4].switch_endianness();
+        self[5].switch_endianness();
+        self[6].switch_endianness();
+        self[7].switch_endianness();
+        self[8].switch_endianness();
+        self[9].switch_endianness();
+        self[10].switch_endianness();
+        self[11].switch_endianness();
+        self[12].switch_endianness();
+        self[13].switch_endianness();
+        self[14].switch_endianness();
+        self[15].switch_endianness();
+        self[16].switch_endianness();
+        self[17].switch_endianness();
+        self[18].switch_endianness();
+        self[19].switch_endianness();
+        self[20].switch_endianness();
+        self[21].switch_endianness();
+        self[22].switch_endianness();
+        self[23].switch_endianness();
+    }
+}
+
+impl<T> Packed for [T;25] where T: Packed {
+    fn switch_endianness(&mut self) {
+        self[0].switch_endianness();
+        self[1].switch_endianness();
+        self[2].switch_endianness();
+        self[3].switch_endianness();
+        self[4].switch_endianness();
+        self[5].switch_endianness();
+        self[6].switch_endianness();
+        self[7].switch_endianness();
+        self[8].switch_endianness();
+        self[9].switch_endianness();
+        self[10].switch_endianness();
+        self[11].switch_endianness();
+        self[12].switch_endianness();
+        self[13].switch_endianness();
+        self[14].switch_endianness();
+        self[15].switch_endianness();
+        self[16].switch_endianness();
+        self[17].switch_endianness();
+        self[18].switch_endianness();
+        self[19].switch_endianness();
+        self[20].switch_endianness();
+        self[21].switch_endianness();
+        self[22].switch_endianness();
+        self[23].switch_endianness();
+        self[24].switch_endianness();
+    }
+}
+
+impl<T> Packed for [T;26] where T: Packed {
+    fn switch_endianness(&mut self) {
+        self[0].switch_endianness();
+        self[1].switch_endianness();
+        self[2].switch_endianness();
+        self[3].switch_endianness();
+        self[4].switch_endianness();
+        self[5].switch_endianness();
+        self[6].switch_endianness();
+        self[7].switch_endianness();
+        self[8].switch_endianness();
+        self[9].switch_endianness();
+        self[10].switch_endianness();
+        self[11].switch_endianness();
+        self[12].switch_endianness();
+        self[13].switch_endianness();
+        self[14].switch_endianness();
+        self[15].switch_endianness();
+        self[16].switch_endianness();
+        self[17].switch_endianness();
+        self[18].switch_endianness();
+        self[19].switch_endianness();
+        self[20].switch_endianness();
+        self[21].switch_endianness();
+        self[22].switch_endianness();
+        self[23].switch_endianness();
+        self[24].switch_endianness();
+        self[25].switch_endianness();
+    }
+}
+
+impl<T> Packed for [T;27] where T: Packed {
+    fn switch_endianness(&mut self) {
+        self[0].switch_endianness();
+        self[1].switch_endianness();
+        self[2].switch_endianness();
+        self[3].switch_endianness();
+        self[4].switch_endianness();
+        self[5].switch_endianness();
+        self[6].switch_endianness();
+        self[7].switch_endianness();
+        self[8].switch_endianness();
+        self[9].switch_endianness();
+        self[10].switch_endianness();
+        self[11].switch_endianness();
+        self[12].switch_endianness();
+        self[13].switch_endianness();
+        self[14].switch_endianness();
+        self[15].switch_endianness();
+        self[16].switch_endianness();
+        self[17].switch_endianness();
+        self[18].switch_endianness();
+        self[19].switch_endianness();
+        self[20].switch_endianness();
+        self[21].switch_endianness();
+        self[22].switch_endianness();
+        self[23].switch_endianness();
+        self[24].switch_endianness();
+        self[25].switch_endianness();
+        self[26].switch_endianness();
+    }
+}
+
+impl<T> Packed for [T;28] where T: Packed {
+    fn switch_endianness(&mut self) {
+        self[0].switch_endianness();
+        self[1].switch_endianness();
+        self[2].switch_endianness();
+        self[3].switch_endianness();
+        self[4].switch_endianness();
+        self[5].switch_endianness();
+        self[6].switch_endianness();
+        self[7].switch_endianness();
+        self[8].switch_endianness();
+        self[9].switch_endianness();
+        self[10].switch_endianness();
+        self[11].switch_endianness();
+        self[12].switch_endianness();
+        self[13].switch_endianness();
+        self[14].switch_endianness();
+        self[15].switch_endianness();
+        self[16].switch_endianness();
+        self[17].switch_endianness();
+        self[18].switch_endianness();
+        self[19].switch_endianness();
+        self[20].switch_endianness();
+        self[21].switch_endianness();
+        self[22].switch_endianness();
+        self[23].switch_endianness();
+        self[24].switch_endianness();
+        self[25].switch_endianness();
+        self[26].switch_endianness();
+        self[27].switch_endianness();
+    }
+}
+
+impl<T> Packed for [T;29] where T: Packed {
+    fn switch_endianness(&mut self) {
+        self[0].switch_endianness();
+        self[1].switch_endianness();
+        self[2].switch_endianness();
+        self[3].switch_endianness();
+        self[4].switch_endianness();
+        self[5].switch_endianness();
+        self[6].switch_endianness();
+        self[7].switch_endianness();
+        self[8].switch_endianness();
+        self[9].switch_endianness();
+        self[10].switch_endianness();
+        self[11].switch_endianness();
+        self[12].switch_endianness();
+        self[13].switch_endianness();
+        self[14].switch_endianness();
+        self[15].switch_endianness();
+        self[16].switch_endianness();
+        self[17].switch_endianness();
+        self[18].switch_endianness();
+        self[19].switch_endianness();
+        self[20].switch_endianness();
+        self[21].switch_endianness();
+        self[22].switch_endianness();
+        self[23].switch_endianness();
+        self[24].switch_endianness();
+        self[25].switch_endianness();
+        self[26].switch_endianness();
+        self[27].switch_endianness();
+        self[28].switch_endianness();
+    }
+}
+
+impl<T> Packed for [T;30] where T: Packed {
+    fn switch_endianness(&mut self) {
+        self[0].switch_endianness();
+        self[1].switch_endianness();
+        self[2].switch_endianness();
+        self[3].switch_endianness();
+        self[4].switch_endianness();
+        self[5].switch_endianness();
+        self[6].switch_endianness();
+        self[7].switch_endianness();
+        self[8].switch_endianness();
+        self[9].switch_endianness();
+        self[10].switch_endianness();
+        self[11].switch_endianness();
+        self[12].switch_endianness();
+        self[13].switch_endianness();
+        self[14].switch_endianness();
+        self[15].switch_endianness();
+        self[16].switch_endianness();
+        self[17].switch_endianness();
+        self[18].switch_endianness();
+        self[19].switch_endianness();
+        self[20].switch_endianness();
+        self[21].switch_endianness();
+        self[22].switch_endianness();
+        self[23].switch_endianness();
+        self[24].switch_endianness();
+        self[25].switch_endianness();
+        self[26].switch_endianness();
+        self[27].switch_endianness();
+        self[28].switch_endianness();
+        self[29].switch_endianness();
+    }
+}
+
+impl<T> Packed for [T;31] where T: Packed {
+    fn switch_endianness(&mut self) {
+        self[0].switch_endianness();
+        self[1].switch_endianness();
+        self[2].switch_endianness();
+        self[3].switch_endianness();
+        self[4].switch_endianness();
+        self[5].switch_endianness();
+        self[6].switch_endianness();
+        self[7].switch_endianness();
+        self[8].switch_endianness();
+        self[9].switch_endianness();
+        self[10].switch_endianness();
+        self[11].switch_endianness();
+        self[12].switch_endianness();
+        self[13].switch_endianness();
+        self[14].switch_endianness();
+        self[15].switch_endianness();
+        self[16].switch_endianness();
+        self[17].switch_endianness();
+        self[18].switch_endianness();
+        self[19].switch_endianness();
+        self[20].switch_endianness();
+        self[21].switch_endianness();
+        self[22].switch_endianness();
+        self[23].switch_endianness();
+        self[24].switch_endianness();
+        self[25].switch_endianness();
+        self[26].switch_endianness();
+        self[27].switch_endianness();
+        self[28].switch_endianness();
+        self[29].switch_endianness();
+        self[30].switch_endianness();
+    }
+}
+
+impl<T> Packed for [T;32] where T: Packed {
+    fn switch_endianness(&mut self) {
+        self[0].switch_endianness();
+        self[1].switch_endianness();
+        self[2].switch_endianness();
+        self[3].switch_endianness();
+        self[4].switch_endianness();
+        self[5].switch_endianness();
+        self[6].switch_endianness();
+        self[7].switch_endianness();
+        self[8].switch_endianness();
+        self[9].switch_endianness();
+        self[10].switch_endianness();
+        self[11].switch_endianness();
+        self[12].switch_endianness();
+        self[13].switch_endianness();
+        self[14].switch_endianness();
+        self[15].switch_endianness();
+        self[16].switch_endianness();
+        self[17].switch_endianness();
+        self[18].switch_endianness();
+        self[19].switch_endianness();
+        self[20].switch_endianness();
+        self[21].switch_endianness();
+        self[22].switch_endianness();
+        self[23].switch_endianness();
+        self[24].switch_endianness();
+        self[25].switch_endianness();
+        self[26].switch_endianness();
+        self[27].switch_endianness();
+        self[28].switch_endianness();
+        self[29].switch_endianness();
+        self[30].switch_endianness();
+        self[31].switch_endianness();
+    }
+}
+
 /// `Unpacker` provides the `std::io::Read` API but for any type `T` implementing 
 /// [`Packed`](trait.Packed.html). It does not perform any endianness conversion and thus always 
 /// reads data using the system endianness.
