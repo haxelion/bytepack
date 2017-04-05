@@ -27,8 +27,8 @@ deemed safe to read and write. An automatic derive for structures made only of t
 `Packed` is also implemented in the [`bytepack_derive`](https://github.com/haxelion/bytepack_derive) 
 crate.
 
-Example
--------
+Examples
+--------
 
 Here are two functions which can serialize and deserialize a `Vec<f32>`:
 
