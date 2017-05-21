@@ -1,6 +1,6 @@
 [package]
 name = "bytepack"
-version = "0.3.1"
+version = "0.4.0"
 authors = ["Charles Hubain <github@haxelion.eu>"]
 description = "bytepack offers a Read and Write trait extension generalized for any packed data type."
 categories = ["encoding", "parsing"]
