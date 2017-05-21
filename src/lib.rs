@@ -958,6 +958,16 @@ pub trait Packer {
     /// ```
     fn pack<T: Packed>(&mut self, t: T) -> Result<()>;
 
+    /// Pack a single value of type `T` passed by reference.
+    ///
+    /// ```no_run
+    /// # use bytepack::Packer;
+    /// # use std::fs::File;
+    /// let mut file = File::create("test").unwrap();
+    /// file.pack(42f32).unwrap();
+    /// ```
+    fn pack_ref<T: Packed, P: AsRef<T>>(&mut self, t: P) -> Result<()>;
+
     /// Pack all the values of type `T` from `buf`.
     ///
     /// ```no_run
@@ -1034,6 +1044,14 @@ impl<W> Packer for W where W: Write {
         return Ok(());
     }
 
+    fn pack_ref<T: Packed, P: AsRef<T>>(&mut self, t: P) -> Result<()> {
+        // safe because we build a slice of exactly size_of::<T> bytes
+        unsafe {
+            self.write_all(slice::from_raw_parts(transmute::<&T, *const u8>(t.as_ref()), size_of::<T>()))?;
+        }
+        return Ok(());
+    }
+
     fn pack_all<T: Packed>(&mut self, t: &[T]) -> Result<()> {
         // safe because we build a slice of exactly t.len() * size_of::<T> bytes
         unsafe {
@@ -1057,6 +1075,10 @@ pub trait LEUnpacker {
 /// documentation.
 pub trait LEPacker {
     fn pack<T: Packed>(&mut self, t: T) -> Result<()>;
+
+    /// Here T needs to be `Clone` because the endianness switch cannot be done in-place. This method 
+    /// thus allocates a copy of `buf` if an endianness switch is needed.
+    fn pack_ref<T: Packed + Clone, P: AsRef<T>>(&mut self, t: P) -> Result<()>;
 
     /// Here T needs to be `Clone` because the endianness switch cannot be done in-place. This method 
     /// thus allocates a copy of `buf` if an endianness switch is needed.
@@ -1115,6 +1137,17 @@ impl<W> LEPacker for W where W: Write {
         }
     }
 
+    fn pack_ref<T: Packed + Clone, P: AsRef<T>>(&mut self, t: P) -> Result<()> {
+        if cfg!(target_endian = "big") {
+            let mut t_copy = t.as_ref().clone();
+            t_copy.switch_endianness();
+            Packer::pack(self, t_copy)
+        }
+        else {
+            Packer::pack_ref(self, t)
+        }
+    }
+
     fn pack_all<T: Packed + Clone>(&mut self, buf: &[T]) -> Result<()> {
         if cfg!(target_endian = "big") {
             let mut buf_copy = buf.to_vec();
@@ -1146,12 +1179,16 @@ pub trait BEPacker {
 
     /// Here T needs to be `Clone` because the endianness switch cannot be done in-place. This method 
     /// thus allocates a copy of `buf` if an endianness switch is needed.
+    fn pack_ref<T: Packed + Clone, P: AsRef<T>>(&mut self, t: P) -> Result<()>;
+
+    /// Here T needs to be `Clone` because the endianness switch cannot be done in-place. This method 
+    /// thus allocates a copy of `buf` if an endianness switch is needed.
     fn pack_all<T: Packed + Clone>(&mut self, buf: &[T]) -> Result<()>;
 }
 
 impl<R> BEUnpacker for R where R: Read {
     fn unpack<T: Packed>(&mut self) -> Result<T> {
-        if cfg!(target_endian = "big") {
+        if cfg!(target_endian = "little") {
             let mut t = Unpacker::unpack::<T>(self)?;
             t.switch_endianness();
             Ok(t)
@@ -1162,7 +1199,7 @@ impl<R> BEUnpacker for R where R: Read {
     }
 
     fn unpack_to_end<T: Packed>(&mut self, buf: &mut Vec<T>) -> Result<usize> {
-        if cfg!(target_endian = "big") {
+        if cfg!(target_endian = "little") {
             let size = Unpacker::unpack_to_end(self, buf)?;
             let start = buf.len() - size;
             for i in start..buf.len() {
@@ -1176,7 +1213,7 @@ impl<R> BEUnpacker for R where R: Read {
     }
 
     fn unpack_exact<T: Packed>(&mut self, buf: &mut [T]) -> Result<()> {
-        if cfg!(target_endian = "big") {
+        if cfg!(target_endian = "little") {
             Unpacker::unpack_exact(self, buf)?;
             for i in 0..buf.len() {
                 buf[i].switch_endianness();
@@ -1191,7 +1228,7 @@ impl<R> BEUnpacker for R where R: Read {
 
 impl<W> BEPacker for W where W: Write {
     fn pack<T: Packed>(&mut self, t: T) -> Result<()> {
-        if cfg!(target_endian = "big") {
+        if cfg!(target_endian = "little") {
             let mut t_copy = t;
             t_copy.switch_endianness();
             Packer::pack(self, t_copy)
@@ -1201,8 +1238,19 @@ impl<W> BEPacker for W where W: Write {
         }
     }
 
+    fn pack_ref<T: Packed + Clone, P: AsRef<T>>(&mut self, t: P) -> Result<()> {
+        if cfg!(target_endian = "little") {
+            let mut t_copy = t.as_ref().clone();
+            t_copy.switch_endianness();
+            Packer::pack(self, t_copy)
+        }
+        else {
+            Packer::pack_ref(self, t)
+        }
+    }
+
     fn pack_all<T: Packed + Clone>(&mut self, buf: &[T]) -> Result<()> {
-        if cfg!(target_endian = "big") {
+        if cfg!(target_endian = "little") {
             let mut buf_copy = buf.to_vec();
             for i in 0..buf_copy.len() {
                 buf_copy[i].switch_endianness();

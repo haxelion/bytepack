@@ -85,3 +85,24 @@ fn struct_unpack() {
     assert!(foo.b == 3.14f32);
     assert!(foo.c == -42i8);
 }
+
+#[test]
+fn endianness() {
+    use bytepack::{LEPacker, LEUnpacker, BEPacker, BEUnpacker};
+
+    let mut buffer = Cursor::new(vec![0u8, 128]);
+    Packer::pack::<u32>(&mut buffer, 0x12345678).unwrap();
+    LEPacker::pack::<u32>(&mut buffer, 0x12345678).unwrap();
+    BEPacker::pack::<u32>(&mut buffer, 0x12345678).unwrap();
+    buffer.set_position(0);
+    if cfg!(target_endian = "big") {
+        assert!(BEUnpacker::unpack::<u32>(&mut buffer).unwrap() == 0x12345678);
+        assert!(BEUnpacker::unpack::<u32>(&mut buffer).unwrap() == 0x78563412);
+        assert!(LEUnpacker::unpack::<u32>(&mut buffer).unwrap() == 0x78563412);
+    }
+    else if cfg!(target_endian = "little") {
+        assert!(LEUnpacker::unpack::<u32>(&mut buffer).unwrap() == 0x12345678);
+        assert!(BEUnpacker::unpack::<u32>(&mut buffer).unwrap() == 0x78563412);
+        assert!(LEUnpacker::unpack::<u32>(&mut buffer).unwrap() == 0x78563412);
+    }
+}
